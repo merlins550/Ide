@@ -84,7 +84,15 @@ python pdap.py "my startup idea" --persona-dir personas
 This loads all persona definitions from the `personas/` directory and
 prints each persona's analysis of the provided idea.
 
-## Usage
+Persona definitions should be provided as individual JSON files in the `personas/` directory. Each JSON file should define a single persona and follow the expected schema (see example below).
+
+**Example persona definition (`personas/visionary.json`):**
+```json
+{
+  "name": "Visionary",
+  "description": "Sees the big picture and future potential.",
+  "prompt": "As a visionary, analyze this idea for its long-term impact and disruptive potential."
+}
 
 1.  **Input your idea:** Type your initial idea into the text box at the bottom of the chat interface.
 2.  **Send:** Click the "Send" button (paper plane icon) or press `Enter` (without `Shift`) to send your idea.
