@@ -130,11 +130,26 @@ class WorkflowOrchestrator:
     def run(self, idea: str) -> Dict[str, str]:
         outputs: Dict[str, str] = {}
         accumulated: str = ""
+        import tiktoken
+
+        # Set a safe context token limit (e.g., 3000 for a 4096-token model)
+        MAX_CONTEXT_TOKENS = 3000
+        enc = tiktoken.encoding_for_model(getattr(self.llm, "model_name", "gpt-3.5-turbo"))
+
+        def truncate_context(text, max_tokens):
+            tokens = enc.encode(text)
+            if len(tokens) <= max_tokens:
+                return text
+            truncated = enc.decode(tokens[-max_tokens:])
+            return truncated
+
         for persona in self.select_personas(idea):
             retriever = Retriever(persona)
             snippets = retriever.search(idea)
             persona_context = "\n".join(snippets)
             context = persona_context if self.parallel else (accumulated + ("\n" if accumulated else "") + persona_context)
+            # Truncate context if it exceeds the token limit
+            context = truncate_context(context, MAX_CONTEXT_TOKENS)
             prompt = (
                 f"You are {persona.name}. Using the following context, "
                 f"analyze the idea: '{idea}'.\nContext:\n{context}"
