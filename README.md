@@ -80,13 +80,6 @@ Persona‑Driven Analysis Platform (PDAP). Example usage:
 
 ```bash
 python pdap.py "my startup idea" --persona-dir personas
-```
-
-Add `--parallel` to analyze with personas independently instead of chaining:
-
-```bash
-python pdap.py "my startup idea" --persona-dir personas --parallel
-```
 
 This loads all persona definitions from the `personas/` directory and
 prints each persona's analysis of the provided idea.
