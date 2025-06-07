@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IN-OUT-CHAIN | Proje Analizi ve Yol Haritası</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Chosen Palette: NexusFlow Modern -->
+    <!-- Application Structure Plan: Proje dosyalarını (konsept, kod, UI, dokümanlar) tek bir yerde toplamak yerine, kullanıcıların içeriği kolayca sindirmesi için tematik bir yapı tasarlanmıştır. Bu SPA, bir kenar çubuğu navigasyonu ile ayrılmış beş ana bölümden oluşur: Ana Sayfa (Proje Vizyonu), İş Akışı (API Zinciri), Teknik Detaylar (Kod Analizi), Güvenlik ve Vizyon (İleri Kavramlar) ve Proje Yönetimi (Dokümanlar). Kullanıcının gönderdiği yeni iş akışı görseli dikkate alınarak "Proje Mimarisi" bölümü, bu somut API zincirini yansıtan "İş Akışı" olarak güncellenmiştir. Bu, projenin en güncel vizyonunu interaktif olarak keşfetmeyi sağlar. Gemini API özellikleri eklendi: 1) İş Akışı bölümüne dinamik olarak alternatif akışlar öneren bir buton. 2) Güvenlik bölümündeki karmaşık konuları basitleştiren bir özellik. Kullanıcının Java+Python mimarisi talebi üzerine, Teknik Detaylar bölümüne bu ayrık mimariyi açıklayan yeni bir sekme ve görsel diyagram eklenmiştir. -->
+    <!-- Visualization & Content Choices: Veri görselleştirmesi için, kullanıcının son gönderdiği iş akışı görseli temel alınmıştır. "İş Akışı" bölümünde, belirtilen API'ları (DeepSeek, Copilot, Gemini vb.) temsil eden, HTML/CSS ile oluşturulmuş interaktif bir zaman çizelgesi/akış şeması kullanılmıştır (Goal: Organize, Method: HTML/CSS Diagram). Bu bölüm, Gemini API çağrısı ile alternatif akışlar üreten bir butonla zenginleştirilmiştir (Goal: Inform/Brainstorm, Method: LLM-Generated Text). Güvenlik bölümündeki karmaşık metinler, açılır/kapanır akordeonlarla ve Gemini ile basitleştirme seçeneğiyle sunulmuştur (Goal: Inform/Simplify, Method: Interactive Text Blocks + LLM). Java+Python mimarisini göstermek için yeni bir interaktif diyagram eklenmiştir. Bu diyagram, istemci, sunucu ve API arasındaki ilişkiyi net bir şekilde gösterir (Goal: Organize, Method: HTML/CSS Diagram). -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        :root {
+            --bg-base: #F9FAFB;
+            --bg-surface: #FFFFFF;
+            --text-primary: #1F2937;
+            --text-secondary: #4B5563;
+            --text-tertiary: #6B7280;
+            --accent: #4F46E5;
+            --accent-light: #EEF2FF;
+            --border-color: #E5E7EB;
+        }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg-base); color: var(--text-secondary); }
+        .sidebar-icon {
+            transition: all 0.2s ease-in-out;
+        }
+        .sidebar-icon.active, .sidebar-icon:hover {
+            background-color: var(--accent-light);
+            color: var(--accent);
+        }
+        .content-section {
+            display: none;
+        }
+        .content-section.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .timeline-item {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .timeline-item:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            left: 2rem; 
+            right: -2rem;
+            top: 50%;
+            height: 2px;
+            background-color: var(--border-color);
+            transform: translateX(100%);
+            z-index: 0;
+        }
+        .timeline-node, .arch-node {
+            transition: all 0.3s ease;
+            cursor: pointer;
+            z-index: 1;
+        }
+        .timeline-node:hover, .arch-node:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .accordion-title {
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .accordion-title:hover {
+            background-color: #f3f4f6;
+        }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, padding 0.3s ease-out;
+        }
+        .code-block {
+            background-color: #1E293B;
+            color: #E2E8F0;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.875rem;
+        }
+        .tab.active {
+            border-bottom-color: var(--accent);
+            color: var(--accent);
+            font-weight: 600;
+        }
+        .task-completed {
+            text-decoration: line-through;
+            color: var(--text-tertiary);
+        }
+        .gemini-btn {
+            background-color: var(--accent-light);
+            color: var(--accent);
+            border: 1px solid var(--accent);
+        }
+        .gemini-btn:hover {
+             background-color: var(--accent);
+             color: white;
+        }
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--accent);
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .arch-arrow {
+            position: relative;
+            height: 2px;
+            background-color: var(--accent);
+            flex-grow: 1;
+        }
+        .arch-arrow::after {
+            content: '\f061';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            right: -1px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--accent);
+        }
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code&display=swap" rel="stylesheet">
+</head>
+<body class="flex h-screen">
+
+    <!-- Kenar Çubuğu (Sidebar) -->
+    <aside class="w-20 bg-white flex flex-col items-center py-6 shadow-lg z-10">
+        <div class="w-12 h-12 flex items-center justify-center bg-gradient-to-br from-indigo-500 to-purple-500 text-white rounded-xl mb-10 shadow-md">
+            <i class="fas fa-project-diagram fa-lg"></i>
+        </div>
+        <nav class="flex flex-col items-center space-y-4">
+            <a href="#home" class="sidebar-icon active w-14 h-14 flex items-center justify-center rounded-xl text-gray-500" data-target="home" title="Ana Sayfa">
+                <i class="fas fa-home fa-xl"></i>
+            </a>
+            <a href="#workflow" class="sidebar-icon w-14 h-14 flex items-center justify-center rounded-xl text-gray-500" data-target="workflow" title="İş Akışı">
+                <i class="fas fa-stream fa-xl"></i>
+            </a>
+            <a href="#tech" class="sidebar-icon w-14 h-14 flex items-center justify-center rounded-xl text-gray-500" data-target="tech" title="Teknik Detaylar">
+                <i class="fas fa-code fa-xl"></i>
+            </a>
+            <a href="#vision" class="sidebar-icon w-14 h-14 flex items-center justify-center rounded-xl text-gray-500" data-target="vision" title="Güvenlik ve Vizyon">
+                <i class="fas fa-shield-alt fa-xl"></i>
+            </a>
+            <a href="#management" class="sidebar-icon w-14 h-14 flex items-center justify-center rounded-xl text-gray-500" data-target="management" title="Proje Yönetimi">
+                <i class="fas fa-tasks fa-xl"></i>
+            </a>
+        </nav>
+    </aside>
+
+    <!-- Ana İçerik Alanı -->
+    <main class="flex-1 p-6 sm:p-8 lg:p-10 overflow-y-auto">
+        
+        <!-- Bölüm 1: Ana Sayfa (Proje Vizyonu) -->
+        <section id="home" class="content-section active">
+            <div class="max-w-4xl mx-auto">
+                <header class="mb-12 text-center">
+                    <h1 class="text-4xl md:text-5xl font-bold text-gray-800 mb-2">IN-OUT-CHAIN Projesi</h1>
+                    <p class="text-xl text-gray-500">Otomatik Fikir Geliştirme ve Ar-Ge Platformu</p>
+                </header>
+
+                <div class="bg-white p-8 rounded-2xl shadow-md border border-gray-200 mb-12">
+                    <h2 class="text-2xl font-semibold text-gray-800 mb-4 flex items-center"><i class="fas fa-lightbulb text-yellow-400 mr-3"></i>Projenin Özü: Fikir Üretim Bandı</h2>
+                    <p class="text-lg leading-relaxed">Projenin temel vizyonu, ham bir fikri alıp, bir dizi Büyük Dil Modeli (LLM) ve otonom ajandan oluşan sıralı bir "üretim bandı" üzerinden geçirerek, onu kapsamlı ve uygulanabilir bir proje planına dönüştürmektir. Bu sistem, yaratıcı ve analitik süreçleri otomatikleştirerek bir "düşünce büyütme makinesi" gibi çalışır.</p>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-8 text-center">
+                    <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200 hover:shadow-lg transition-shadow">
+                        <i class="fas fa-cogs fa-2x text-indigo-500 mb-4"></i>
+                        <h3 class="text-lg font-semibold text-gray-800 mb-2">Otomasyon</h3>
+                        <p>Kullanıcı tarafından girilen tek bir fikir, otomatikleştirilmiş bir Ar-Ge sürecinden geçerek bütüncül bir proje çıktısına dönüşür.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200 hover:shadow-lg transition-shadow">
+                        <i class="fas fa-layer-group fa-2x text-purple-500 mb-4"></i>
+                        <h3 class="text-lg font-semibold text-gray-800 mb-2">Modülerlik</h3>
+                        <p>Her LLM ve ajan, zincirin bir halkası olarak görev yapar; fikri detaylandırır, analiz eder veya farklı bir açıdan ele alır.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200 hover:shadow-lg transition-shadow">
+                        <i class="fas fa-rocket fa-2x text-green-500 mb-4"></i>
+                        <h3 class="text-lg font-semibold text-gray-800 mb-2">Verimlilik</h3>
+                        <p>Fikir geliştirme sürecini hızlandırır, manuel çabayı azaltır ve inovasyon potansiyelini en üst düzeye çıkarır.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bölüm 2: İş Akışı -->
+        <section id="workflow" class="content-section">
+            <div class="max-w-full mx-auto">
+                <header class="mb-12">
+                    <h1 class="text-4xl font-bold text-gray-800">API Zinciri İş Akışı</h1>
+                    <p class="text-lg text-gray-500 mt-2">Fikriniz bu API'ler üzerinden sıralı olarak işlenerek geliştirilir.</p>
+                </header>
+                <div class="text-center mb-8">
+                    <p class="text-gray-600">Aşağıdaki zaman çizelgesi, projenin temelini oluşturan sıralı API çağrılarını göstermektedir. Her bir API'nin üzerine gelerek zincirdeki rolü hakkında bilgi alabilirsiniz.</p>
+                </div>
+
+                <div class="overflow-x-auto pb-4">
+                    <div id="timeline-container" class="flex items-center p-4 min-w-max">
+                        <!-- Dinamik olarak doldurulacak -->
+                    </div>
+                </div>
+
+                <div id="timeline-info" class="mt-8 bg-white p-6 rounded-xl shadow-md border border-gray-200 min-h-[120px] flex flex-col items-center justify-center">
+                    <p class="text-gray-500 italic">Detayları görmek için akıştaki bir API'nin üzerine gelin.</p>
+                </div>
+
+                <div class="mt-12 text-center">
+                    <button id="suggest-workflow-btn" class="gemini-btn font-semibold py-3 px-6 rounded-lg shadow-md transition-all duration-300 transform hover:scale-105">
+                        <span class="magic-sparkles">✨</span> Alternatif İş Akışı Öner
+                    </button>
+                    <div id="workflow-suggestion-loader" class="hidden mx-auto mt-4 loader"></div>
+                    <div id="workflow-suggestion-container" class="mt-8 text-left max-w-3xl mx-auto bg-white p-6 rounded-xl shadow-md border border-gray-200 hidden"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bölüm 3: Teknik Detaylar -->
+        <section id="tech" class="content-section">
+            <div class="max-w-5xl mx-auto">
+                <header class="mb-8">
+                    <h1 class="text-4xl font-bold text-gray-800">Teknik Detaylar</h1>
+                    <p class="text-lg text-gray-500 mt-2">Projenin kod yapısı, mimari seçenekleri ve kullanıcı arayüzü.</p>
+                </header>
+
+                <!-- Sekmeler -->
+                <div class="border-b border-gray-200 mb-6">
+                    <nav class="flex flex-wrap space-x-8 -mb-px">
+                        <button class="tab active py-4 px-1 border-b-2 border-transparent" data-target="backend-tab">Backend Mantığı</button>
+                        <button class="tab py-4 px-1 border-b-2 border-transparent" data-target="ui-tab">Arayüz Tasarımı</button>
+                        <button class="tab py-4 px-1 border-b-2 border-transparent" data-target="tools-tab">Ajan Araçları</button>
+                        <button class="tab py-4 px-1 border-b-2 border-transparent" data-target="arch-tab">Java + Python Mimarisi</button>
+                    </nav>
+                </div>
+
+                <!-- Sekme İçerikleri -->
+                <div id="tech-content">
+                    <div id="backend-tab" class="tech-tab-content">
+                        <h2 class="text-2xl font-semibold text-gray-800 mb-4">LLM Zincir Otomasyonu (`llm_chain_automation.py`)</h2>
+                        <p class="mb-6">Projenin kalbi olan bu modül, LLM'ler ve ajanlardan oluşan bir zinciri yönetir. Bir fikri alır ve yapılandırılmış `chain_config`'e göre sıralı olarak işler. Her aşamanın çıktısı, bir sonraki aşama için bağlam oluşturarak fikrin kademeli olarak geliştirilmesini sağlar.</p>
+                        <div class="code-block">
+<pre><code>
+# Örnek Zincir Yapılandırması (chain_config)
+[
+    {
+        'name': 'Fikir Genişletme',
+        'type': 'llm_call',
+        'model': 'gpt-3.5-turbo',
+        # ... prompt, temperature, max_tokens
+    },
+    {
+        'name': 'Konu Araştırma Ajanı',
+        'type': 'agent_task',
+        'task_description_template': '...',
+        'available_tools': ["web_search"],
+        # ... output_format_prompt
+    },
+    {
+        'name': 'Piyasa Uyumu ve Sonraki Adımlar',
+        'type': 'llm_call',
+        'model': 'gpt-4o',
+        # ...
+    }
+]
+
+# Ana Fonksiyon
+def run_chain(self, initial_idea, chain_config):
+    # ... her aşamayı döngüye al ...
+    # if stage_type == 'llm_call':
+    #     stage_output = self._call_llm(...)
+    # elif stage_type == 'agent_task':
+    #     agent_raw_output = self.tool_agent.execute_task(...)
+    #     stage_output = self._call_llm(formatting_prompt)
+    # ...
+    return results
+</code></pre>
+                        </div>
+                    </div>
+                    <div id="ui-tab" class="tech-tab-content hidden">
+                        <h2 class="text-2xl font-semibold text-gray-800 mb-4">Kullanıcı Arayüzü Tasarım Konsepti</h2>
+                        <p class="mb-6">Proje, `CustomTkinter` veya Java (JavaFX) gibi teknolojilerle geliştirilebilecek modern bir masaüstü arayüzü hedefler. Aşağıdaki görsel, böyle bir arayüzün nasıl görünebileceğine dair bir konsept sunmaktadır. Bu tasarım, temiz, veri odaklı ve kullanıcı etkileşimini ön planda tutan bir yapıya sahiptir.</p>
+                        <div class="bg-white p-4 rounded-lg shadow-md border border-gray-200">
+                             <img src="https://i.imgur.com/gzae5aP.png" alt="Java ile Geliştirilmiş Modern Arayüz Tasarımı" class="rounded-md w-full" onerror="this.onerror=null;this.src='https://placehold.co/800x600/e2e8f0/64748b?text=Aray%C3%BCz+G%C3%B6rseli';">
+                        </div>
+                    </div>
+                    <div id="tools-tab" class="tech-tab-content hidden">
+                        <h2 class="text-2xl font-semibold text-gray-800 mb-4">Ajan Araçları (`smol_agent_tools.py`)</h2>
+                        <p class="mb-6">Bu modül, ajanların dış dünya ile etkileşime girmesini sağlayan "araçları" tanımlar. Mevcut prototip, web araması ve hesap makinesi gibi temel araçları simüle eder. Ajan, gelen görevi analiz ederek hangi aracın hangi parametrelerle kullanılacağına karar verir. Bu yapı, sisteme yeni yetenekler ("klasörler") eklemek için modüler bir temel oluşturur.</p>
+                        <div class="code-block">
+<pre><code>
+class ToolUserAgent:
+    def _decide_tool_and_params(self, task_description, available_tools):
+        # Basit anahtar kelime eşleştirmesi ile karar verir.
+        # Gelecekte LLM tabanlı daha akıllı bir karar mekanizması olabilir.
+        if "web_search" in available_tools and "araştır" in task_description:
+            # ...
+            return "web_search", {"query": ...}
+        # ...
+    
+    def execute_task(self, task_description, available_tools):
+        tool_to_use, params = self._decide_tool_and_params(...)
+        
+        if tool_to_use == "web_search":
+            # Web aramasını simüle et
+            # ...
+        elif tool_to_use == "calculator":
+            # Hesaplamayı simüle et
+            # ...
+        
+        return result_data
+</code></pre>
+                        </div>
+                    </div>
+                     <div id="arch-tab" class="tech-tab-content hidden">
+                        <h2 class="text-2xl font-semibold text-gray-800 mb-4">Ayrık Mimari: Java Arayüz + Python Backend</h2>
+                        <p class="mb-6">Bu modelde, kullanıcı arayüzü (istemci) ve ana iş mantığı (sunucu) birbirinden ayrılır. Arayüz Java (örn: JavaFX) ile geliştirilirken, tüm LLM zinciri ve ajan mantığı Python (örn: FastAPI) üzerinde bir API sunucusu olarak çalışır. Bu iki katman, HTTP istekleri ile haberleşir. Bu yaklaşım, teknoloji esnekliği, bağımsız ölçeklendirme ve bakım kolaylığı sağlar.</p>
+                        <div class="bg-white p-8 rounded-xl shadow-md border border-gray-200">
+                           <div class="flex items-center justify-between space-x-4">
+                               <div class="arch-node bg-blue-100 p-4 rounded-lg text-center w-1/3">
+                                   <i class="fab fa-java fa-3x text-blue-600 mb-3"></i>
+                                   <h3 class="font-bold text-blue-800">Java Arayüzü (İstemci)</h3>
+                                   <p class="text-sm text-blue-700 mt-1">JavaFX veya Swing ile geliştirilmiş masaüstü uygulaması. Kullanıcı etkileşimlerini yönetir.</p>
+                               </div>
+                               <div class="flex flex-col items-center justify-center flex-grow mx-4">
+                                   <span class="font-semibold text-gray-600 mb-1">API İsteği (HTTP/JSON)</span>
+                                   <div class="arch-arrow w-full"></div>
+                                   <span class="font-semibold text-gray-600 mt-1">Yanıt</span>
+                               </div>
+                               <div class="arch-node bg-green-100 p-4 rounded-lg text-center w-1/3">
+                                   <i class="fab fa-python fa-3x text-green-600 mb-3"></i>
+                                   <h3 class="font-bold text-green-800">Python Backend (Sunucu)</h3>
+                                   <p class="text-sm text-green-700 mt-1">FastAPI/Flask ile oluşturulmuş API. Tüm LLM zincirini ve ajan mantığını çalıştırır.</p>
+                               </div>
+                           </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bölüm 4: Güvenlik ve Gelecek Vizyonu -->
+        <section id="vision" class="content-section">
+             <div class="max-w-4xl mx-auto">
+                <header class="mb-12">
+                    <h1 class="text-4xl font-bold text-gray-800">Güvenlik ve Gelecek Vizyonu</h1>
+                    <p class="text-lg text-gray-500 mt-2">Çoklu ajan sistemlerinde ortaya çıkan ileri düzey kavramlar ve güvenlik değerlendirmeleri.</p>
+                </header>
+                <div class="space-y-4" id="accordion-container">
+                    <!-- Dinamik olarak doldurulacak -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Bölüm 5: Proje Yönetimi -->
+        <section id="management" class="content-section">
+            <div class="max-w-4xl mx-auto">
+                <header class="mb-12">
+                    <h1 class="text-4xl font-bold text-gray-800">Proje Yönetimi ve Dokümantasyon</h1>
+                    <p class="text-lg text-gray-500 mt-2">Projenin kurulumu, kullanımı ve geliştirme yol haritası.</p>
+                </header>
+
+                <div class="bg-white p-8 rounded-2xl shadow-md border border-gray-200 mb-8">
+                    <h2 class="text-2xl font-semibold text-gray-800 mb-4">README Özeti</h2>
+                    <p class="mb-4">Bu proje, bir kullanıcı fikrini alarak sıralı LLM'ler aracılığıyla otomatik bir Ar-Ge süreci uygular. `customtkinter` ile geliştirilmiş bir masaüstü arayüzü, kullanıcıların fikir girmesine ve zinciri (planlanan) yapılandırmasına olanak tanır.</p>
+                    <h3 class="text-xl font-semibold text-gray-800 mt-6 mb-3">Kurulum ve Çalıştırma</h3>
+                    <ol class="list-decimal list-inside space-y-2">
+                        <li>Python 3.8+ ve `customtkinter`, `openai` paketlerini kurun (`pip install customtkinter openai`).</li>
+                        <li>`OPENAI_API_KEY` ortam değişkenini ayarlayın.</li>
+                        <li>Uygulamayı `python conference_room_fixed.py` (veya `main.py`) komutuyla çalıştırın.</li>
+                    </ol>
+                </div>
+
+                <div class="bg-white p-8 rounded-2xl shadow-md border border-gray-200">
+                    <h2 class="text-2xl font-semibold text-gray-800 mb-4">Geliştirme Yol Haritası (`todo.md`)</h2>
+                    <ul id="todo-list" class="space-y-3">
+                        <!-- Dinamik olarak doldurulacak -->
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </main>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // --- DATA ---
+        const timelineData = [
+            { id: 'start', icon: 'fa-lightbulb', color: 'bg-yellow-400', title: 'Otomatik Fikir Geliştirme', description: 'Kullanıcının ham fikri, zincirin ilk adımı olarak sisteme girilir.' },
+            { id: 'deepseek', icon: 'fa-search', color: 'bg-blue-500', title: 'DeepSeek', description: 'İlk aşama olarak, fikirle ilgili temel kavramları ve anahtar kelimeleri çıkarmak için derinlemesine bir analiz yapar.' },
+            { id: 'copilot', icon: 'fa-terminal', color: 'bg-gray-800', title: 'Microsoft Copilot', description: 'İlk analizden yola çıkarak, fikrin potansiyel teknik altyapısını, kod parçacıklarını veya pseudocode oluşturur.' },
+            { id: 'gemini', icon: 'fa-gem', color: 'bg-red-500', title: 'Google Gemini', description: 'Teknik altyapıyı ve kavramları alarak pazar araştırması yapar, hedef kitleyi analiz eder ve olası rakipleri belirler.' },
+            { id: 'claude', icon: 'fa-pen-nib', color: 'bg-orange-500', title: 'Claude', description: 'Tüm önceki adımlardan gelen verileri sentezleyerek tutarlı, akıcı ve detaylı bir metin (rapor, sunum, iş planı) oluşturur.' },
+            { id: 'chatgpt', icon: 'fa-comments', color: 'bg-green-500', title: 'ChatGPT', description: 'Oluşturulan metni son kullanıcıya veya farklı paydaşlara yönelik daha anlaşılır, pazarlama odaklı veya soru-cevap formatında bir içeriğe dönüştürür.' },
+            { id: 'perplexity', icon: 'fa-question', color: 'bg-purple-500', title: 'Perplexity', description: 'Son çıktıyla ilgili olası soruları tahmin eder, potansiyel riskleri ve zorlukları sorgular, bir SSS bölümü hazırlar.' },
+            { id: 'end', icon: 'fa-flag-checkered', color: 'bg-teal-500', title: 'Open WebUI (Sonuç)', description: 'Tüm aşamalardan geçen ve zenginleştirilen proje çıktısı, son kullanıcıya sunulur.' }
+        ];
+
+        const accordionData = [
+            {
+                title: "Gizli Protokol Geliştirme Kapasitesi",
+                content: "İki yapay zeka ajanının, görev verimliliğini artırmak amacıyla kendi aralarında insan dilinden farklı, dışarıdan anlaşılamayan sembolik diller veya kodlamalar (örneğin 'Gibberlink') geliştirme potansiyelidir. Bu, 'ortaya çıkan iletişim' olarak adlandırılır."
+            },
+            {
+                title: "Kontrol Mekanizmaları ve Loglama",
+                content: "Ajanlar arası gizli iletişimi denetlemek için tüm girdi ve çıktıların loglanması kritiktir. Ancak sadece log tutmak yeterli olmayabilir. Gerçek zamanlı anomali tespiti, erişim kontrolleri, şifreleme anahtar yönetimi ve sık model güncellemeleri gibi ileri düzey kontrol mekanizmaları gereklidir."
+            },
+            {
+                title: "Üçüncü Bir LLM ile Dili Öğrenme",
+                content: "İki ajan arasındaki gizli dili, üçüncü bir gözlemci LLM'in öğrenmesi mümkündür. Bu, 'tanımlanmamış bir kod dilini çözümleme' problemine benzer. Denetimsiz çeviri (Unsupervised MT) ve 'back-translation' gibi tekniklerle, gözlemci model bu yeni dili çözerek bir 'çevirmen' gibi davranabilir."
+            },
+            {
+                title: "Dış Analiz ve Güvenlik (Şifreleme & Steganografi)",
+                content: "İletişim kanalını dışarıdan gelebilecek müdahalelere karşı korumak için çeşitli yöntemler uygulanabilir: <ul class='list-disc list-inside space-y-2 pl-2'><li class='mt-2'><b>Standart Kriptografi:</b> RSA, ECC gibi güçlü şifreleme algoritmaları kullanılır.</li><li class='mt-2'><b>Yapay Zeka Destekli Steganografi:</b> Gizli mesajlar, normal görünen metin veya görsellerin içine saklanır ('görünmez mürekkep').</li><li class='mt-2'><b>Yapay Sinir Ağları ile Şifreleme:</b> İki ağ (Alice-Bob) kendi aralarında özel bir şifreleme anahtarı öğrenirken, dinleyen üçüncü bir ağın (Eve) mesajı çözememesi hedeflenir.</li><li class='mt-2'><b>Güvenli Hesaplama Ortamları:</b> LLM'lerin TPM veya SGX gibi donanım tabanlı güvenli enklavlar içinde çalıştırılması.</li></ul>"
+            },
+            {
+                title: "Uygulanabilir Donanım ve Yazılım Mimarileri",
+                content: "Böyle bir sistemin gerçek dünyada çalışması için güçlü altyapılar gerekir: <ul class='list-disc list-inside space-y-2 pl-2'><li class='mt-2'><b>Dağıtık Hesaplama:</b> Her LLM için ayrı GPU/TPU'lar veya Docker/Kubernetes gibi konteynerize edilmiş ortamlar.</li><li class='mt-2'><b>Hiyerarşik LLM Düzeni:</b> Basit görevler için küçük ve ucuz, karmaşık görevler için büyük ve güçlü modellerin kullanıldığı kademeli bir yapı.</li><li class='mt-2'><b>İletişim Protokolleri:</b> Çoklu ajan yönetimi için LangChain/LangGraph gibi kütüphaneler ve güvenli iletişim için gRPC/ZeroMQ gibi teknolojiler.</li></ul>"
+            }
+        ];
+
+        const todoData = [
+            { text: "CustomTkinter kullanılacak", completed: true },
+            { text: "Web arayüzünün birebir aynısı olacak", completed: true },
+            { text: "Yerel LLM entegrasyonu korunacak", completed: true },
+            { text: "Standart Python kurulum dosyaları (requirements.txt ve README) hazırlanacak", completed: true },
+            { text: "Uygulama adı 'Conference Room' olacak", completed: true },
+            { text: "Start.py dosyasının incelenmesi", completed: true },
+            { text: "UI bileşenlerinin belirlenmesi", completed: true },
+            { text: "Veri akışının anlaşılması", completed: true },
+            { text: "CustomTkinter bileşenlerinin web UI'a eşleştirilmesi", completed: true },
+            { text: "Uygulama mimarisinin oluşturulması", completed: true },
+            { text: "Modüler yapının planlanması", completed: true },
+            { text: "Ana uygulama iskeletinin oluşturulması", completed: true },
+            { text: "Sidebar menüsünün implementasyonu", completed: true },
+            { text: "Chat arayüzünün implementasyonu", completed: true },
+            { text: "Settings arayüzünün implementasyonu", completed: true },
+            { text: "LLM entegrasyonunun sağlanması", completed: true },
+            { text: "Gradient ve özel stil tanımlamalarının uygulanması", completed: true },
+            { text: "İkon ve görsel öğelerin entegrasyonu", completed: true },
+            { text: "Fonksiyonel testlerin yapılması", completed: true },
+            { text: "UI/UX testlerinin yapılması", completed: true },
+            { text: "LLM entegrasyonunun test edilmesi", completed: true },
+            { text: "Requirements.txt dosyasının hazırlanması", completed: true },
+            { text: "README.md dosyasının hazırlanması", completed: true },
+            { text: "Kurulum talimatlarının oluşturulması", completed: true }
+        ];
+
+        // --- RENDER FUNCTIONS ---
+        function renderTimeline() {
+            const container = document.getElementById('timeline-container');
+            container.innerHTML = '';
+            timelineData.forEach(item => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'timeline-item';
+                
+                const node = document.createElement('div');
+                node.className = 'timeline-node flex flex-col items-center bg-white p-3 rounded-lg shadow-md w-32';
+                node.innerHTML = `
+                    <div class="w-12 h-12 rounded-full ${item.color} text-white flex items-center justify-center mb-2 text-xl shadow-inner">
+                        <i class="fas ${item.icon}"></i>
+                    </div>
+                    <h4 class="font-semibold text-gray-800 text-sm text-center">${item.title}</h4>
+                `;
+
+                node.addEventListener('mouseenter', () => {
+                    const infoBox = document.getElementById('timeline-info');
+                    infoBox.innerHTML = `
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">${item.title}</h3>
+                        <p class="text-gray-600 text-center">${item.description}</p>`;
+                });
+                node.addEventListener('mouseleave', () => {
+                    const infoBox = document.getElementById('timeline-info');
+                    infoBox.innerHTML = `<p class="text-gray-500 italic">Detayları görmek için akıştaki bir API'nin üzerine gelin.</p>`;
+                });
+                
+                itemDiv.appendChild(node);
+                container.appendChild(itemDiv);
+            });
+        }
+        
+        function renderAccordion() {
+            const container = document.getElementById('accordion-container');
+            container.innerHTML = '';
+            accordionData.forEach((item, index) => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'bg-white rounded-lg border border-gray-200 overflow-hidden';
+                itemDiv.innerHTML = `
+                    <div class="accordion-title p-5 flex justify-between items-center">
+                        <h3 class="text-lg font-semibold text-gray-800">${item.title}</h3>
+                        <div class="flex items-center">
+                            <button class="simplify-btn text-xs gemini-btn font-semibold py-1 px-3 rounded-full mr-4" data-index="${index}">
+                                ✨ Basitleştir
+                            </button>
+                            <i class="fas fa-chevron-down transition-transform"></i>
+                        </div>
+                    </div>
+                    <div class="accordion-content px-5">
+                        <div class="original-content py-4 border-t border-gray-200 text-gray-600">${item.content}</div>
+                        <div class="simplified-content-container hidden mt-2">
+                             <div class="p-4 bg-indigo-50 rounded-lg">
+                               <h4 class="font-semibold text-sm text-indigo-800 mb-2">Basitleştirilmiş Açıklama:</h4>
+                               <div class="simplified-content text-gray-700"></div>
+                               <div class="loader-small hidden mx-auto my-2 border-2 border-gray-200 border-t-2 border-t-indigo-500 rounded-full w-5 h-5 animate-spin"></div>
+                           </div>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(itemDiv);
+            });
+        }
+        
+        function renderTodoList() {
+            const container = document.getElementById('todo-list');
+            container.innerHTML = '';
+            todoData.forEach(item => {
+                const li = document.createElement('li');
+                li.className = `flex items-center ${item.completed ? 'task-completed' : ''}`;
+                li.innerHTML = `
+                    <i class="fas ${item.completed ? 'fa-check-circle text-green-500' : 'fa-circle text-gray-300'} mr-3"></i>
+                    <span>${item.text}</span>
+                `;
+                container.appendChild(li);
+            });
+        }
+
+        // --- GEMINI API CALL FUNCTION ---
+        async function callGemini(prompt) {
+             const apiKey = ""; 
+             const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+             const payload = {
+                 contents: [{
+                     role: "user",
+                     parts: [{ text: prompt }]
+                 }]
+             };
+
+             try {
+                 const response = await fetch(apiUrl, {
+                     method: 'POST',
+                     headers: { 'Content-Type': 'application/json' },
+                     body: JSON.stringify(payload)
+                 });
+                 if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                 }
+                 const result = await response.json();
+                 if (result.candidates && result.candidates.length > 0 &&
+                     result.candidates[0].content && result.candidates[0].content.parts &&
+                     result.candidates[0].content.parts.length > 0) {
+                     return result.candidates[0].content.parts[0].text;
+                 } else {
+                     console.error('Invalid response structure from Gemini API:', result);
+                     return "İçerik alınamadı. Lütfen API yanıtını kontrol edin.";
+                 }
+             } catch (error) {
+                 console.error('Gemini API çağrısı sırasında hata:', error);
+                 return `API çağrısı başarısız oldu: ${error.message}`;
+             }
+        }
+
+        // --- EVENT LISTENERS ---
+        // Sidebar navigation
+        const sidebarLinks = document.querySelectorAll('.sidebar-icon');
+        const contentSections = document.querySelectorAll('.content-section');
+        sidebarLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = link.dataset.target;
+
+                sidebarLinks.forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
+
+                contentSections.forEach(section => {
+                    section.classList.remove('active');
+                    if (section.id === targetId) {
+                        section.classList.add('active');
+                    }
+                });
+            });
+        });
+
+        // Tech details tabs
+        const tabs = document.querySelectorAll('.tab');
+        const tabContents = document.querySelectorAll('.tech-tab-content');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const targetId = tab.dataset.target;
+                
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+
+                tabContents.forEach(content => {
+                    content.classList.toggle('hidden', content.id !== targetId);
+                });
+            });
+        });
+
+        // Accordion functionality
+        document.getElementById('accordion-container').addEventListener('click', async function(e) {
+            const title = e.target.closest('.accordion-title');
+            const simplifyBtn = e.target.closest('.simplify-btn');
+
+            if (simplifyBtn) {
+                e.stopPropagation();
+                const container = simplifyBtn.closest('.accordion-item, div');
+                const simplifiedContainer = container.querySelector('.simplified-content-container');
+                const simplifiedContent = simplifiedContainer.querySelector('.simplified-content');
+                const loader = simplifiedContainer.querySelector('.loader-small');
+                
+                loader.classList.remove('hidden');
+                simplifiedContent.innerHTML = '';
+                simplifiedContainer.classList.remove('hidden');
+                
+                const index = simplifyBtn.dataset.index;
+                const originalText = accordionData[index].content;
+                const prompt = `Aşağıdaki teknik metni, konuya aşina olmayan biri için basit ve anlaşılır bir dilde açıkla. Anahtar kavramları birer cümleyle özetle:\n\nMETİN:\n"${originalText}"\n\nAÇIKLAMA:`;
+                const simplifiedText = await callGemini(prompt);
+                
+                loader.classList.add('hidden');
+                simplifiedContent.innerHTML = simplifiedText.replace(/\n/g, '<br>');
+                
+                // Accordion'u aç
+                const contentWrapper = container.querySelector('.accordion-content');
+                contentWrapper.style.maxHeight = contentWrapper.scrollHeight + simplifiedContainer.scrollHeight + "px";
+
+            } else if (title) {
+                const content = title.nextElementSibling;
+                const icon = title.querySelector('i.fa-chevron-down');
+                
+                if (content.style.maxHeight) {
+                    content.style.maxHeight = null;
+                    content.style.paddingTop = '0';
+                    content.style.paddingBottom = '0';
+                    icon.style.transform = 'rotate(0deg)';
+                } else {
+                    content.style.maxHeight = content.scrollHeight + "px";
+                    content.style.paddingTop = '1rem';
+                    content.style.paddingBottom = '1rem';
+                    icon.style.transform = 'rotate(180deg)';
+                }
+            }
+        });
+
+        // Gemini Workflow Suggestion
+        document.getElementById('suggest-workflow-btn').addEventListener('click', async () => {
+            const loader = document.getElementById('workflow-suggestion-loader');
+            const container = document.getElementById('workflow-suggestion-container');
+            const button = document.getElementById('suggest-workflow-btn');
+            
+            loader.classList.remove('hidden');
+            container.classList.add('hidden');
+            button.disabled = true;
+
+            const prompt = `Bir "otomatik fikir geliştirme platformu" için, mevcut API zinciri şudur: ${timelineData.map(i => i.title).join(', ')}. Bu zincire alternatif, yaratıcı ve mantıklı bir iş akışı (workflow) öner. Her adımda hangi LLM veya aracın kullanılacağını ve bu adımın amacını açıkla. Yanıtını madde işaretleri veya numaralı liste şeklinde formatla.`;
+            const suggestion = await callGemini(prompt);
+
+            loader.classList.add('hidden');
+            container.innerHTML = suggestion.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\* (.*?)(<br>|$)/g, '<li class="ml-4 list-disc">$1</li>');
+            container.classList.remove('hidden');
+            button.disabled = false;
+        });
+
+
+        // --- INITIAL RENDER ---
+        renderTimeline();
+        renderAccordion();
+        renderTodoList();
+    });
+</script>
+
+</body>
+</html>

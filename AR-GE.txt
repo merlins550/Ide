@@ -1,0 +1,319 @@
+Clouide bu bir zincir ve sen bu llm zincirin ilk halkasısın zemini seninle inşaa edeceğiz ve bu bir kırılma anının ilk kıvılcımı olabilecek potansiyelde bir iş o yüzden üreteceğin fikirlerde potansiyelinin tamamını kullandığından emin ol. Bir çatı proje üretmek istiyorum bunun bir desktop arayüzü olduğunu düşün ve bir chat ekranı oldukça sade bir tasarım ve ayarlar kısmında api keyleri tanımlama alanları olacak burası ilk etapta en dataylı kısım olmalı çünkü işin alameetif harikası bu tarafta yeşeriyor. olay şu tıpkı şu an manuel gerçekleştirdiğim döngüyü bir sistem çatısı altında otomasyonlaştırmak neyitindeyim. bir düz üretim bandı hayal et ve o bandın girişinden bir kullanıcı girdisi llm e input oluyor onun outputu diğer llm e ilk çıkan fikirden daha detaylı ve yorum bazlı bir şekilde inputlanıyor bunu tüm llm zincirine çatı yapısını promt olarak girerek üreteceği yanıtın detay seviyesinin tüm zinciri besleyeceğinin bilincinde bir promt ile output verdiririz böyle kullanıcı tarafından girilen 1 fikir AR-GE sürecini otomize eder ve tam bir proje çıktısı alırız. 
+Düzenlemek
+
+Bir dizi LLM kullanarak fikir geliştirme için otomatik bir sistem oluşturmayı düşündüğünüzü anlıyorum. Bu masaüstü uygulaması için bir konsept taslağı hazırlamama izin verin.
+
+Öncelikle, bu konseptte yardımcı olabilsem de, aslında şu anki konuşmamızdaki tek AI asistanı olduğumu açıklığa kavuşturmak istiyorum. Ancak, sizin tarif ettiğiniz gibi birden fazla AI modelinin birlikte çalışabileceği bir sistem tasarlayacağım.
+
+Projeniz için vizyonum şu şekilde:
+
+Temiz bir arayüze sahip, şu özelliklere sahip bir masaüstü uygulamasına ihtiyacınız var:
+
+    Kullanıcı girişi için basit bir sohbet ekranı
+    API anahtarı yapılandırması için kapsamlı bir ayarlar alanı
+    Farklı LLM'ler arasında çıktıları sırayla ileten bir iş akışı sistemi
+
+Sihir, zincirdeki her LLM'nin bir öncekinin çalışmasını nasıl geliştirdiğiyle gerçekleşir. İlk kullanıcı fikri giderek rafine edilir, genişletilir, analiz edilir ve tamamlanmış bir proje çıktısına dönüştürülür.
+
+Geliştirmemi ister misiniz:
+
+    Bu sistem için daha ayrıntılı bir teknik mimari
+    Arayüzün nasıl görünebileceğine dair bir taslak
+    LLM zincirinin bilgileri nasıl işleyeceğini gösteren bir iş akışı diyagramı
+
+şu an bu tasarımın manuelini simüle ediyorum aynı zamanda o yüzden bir sonra ki llm e girdi olarak vereceğim inputun outputunu vereceksin bu yanıtta. 
+Düzenlemek
+
+LLM zincir sisteminizin manuel sürecini simüle ettiğinizi ve zincirdeki bir sonraki LLM için girdi görevi görecek bir çıktı sağlamamı istediğinizi anlıyorum. İşte konseptinizin yapılandırılmış, ayrıntılı bir analizi ve genişletilmesi:
+LLM Zincir Sistem Analizi ve Geliştirme
+Çekirdek Kavram Değerlendirmesi
+
+Önerilen masaüstü uygulaması, sıralı LLM işlemeyi kullanarak otomatik bir Ar-Ge boru hattı oluşturur. Bu yaklaşım, rafine etme sürecini sistemleştirerek fikir oluşturma iş akışlarını dönüştürmek için önemli bir potansiyele sahiptir.
+Teknik Mimarlık Önerileri
+
+    Birden fazla LLM sağlayıcısını desteklemek için modüler bir API entegrasyon çerçevesi uygulayın
+    Özel işlem zincirlerini tanımlamak için yapılandırılabilir bir iş akışı motoru tasarlayın
+    Zincir bağlantıları arasında parametre devralımı olan bir istem şablonu sistemi geliştirin
+    Jeton kullanımını optimize etmek ve yanıt sürelerini iyileştirmek için bir önbelleğe alma katmanı oluşturun
+
+Kullanıcı Deneyimi Hususları
+
+    Fikrin dönüşüm yolculuğunun görsel temsilini uygulayın
+    Alternatif geliştirme yollarını keşfetmek için dallanma yeteneği ekleyin
+    Fikir gelişimini izlemek için sürüm kontrolünü ekleyin
+    Ekip iyileştirme senaryoları için işbirlikçi özellikler tasarlayın
+
+İş Uygulamaları
+
+    Ürün geliştirmenin hızlandırılması
+    İçerik oluşturma hatları
+    Karmaşık problem çözme çerçeveleri
+    Araştırma hipotezi oluşturma ve test etme
+
+Teknik Uygulama Zorlukları
+
+    LLM geçişleri arasında bağlam korumayı yönetme
+    Her zincir aşaması için istem mühendisliğinin optimize edilmesi
+    Otomasyonu kullanıcı müdahale noktalarıyla dengeleme
+    Hata kurtarma ve zincir dayanıklılığının ele alınması
+
+Sonraki Geliştirme Adımları
+
+    Ayrıntılı sistem mimarisi dokümantasyonu oluşturun
+    Fikir depolama ve dönüşüm geçmişi için tasarım veritabanı şeması
+    Kimlik doğrulama işleme ile API bağlantı çerçevesini geliştirin
+    2-3 LLM entegrasyon noktasıyla iş akışı motorunun prototipini oluşturun
+
+Bu sistem, başlangıçtaki konseptleri ilerici yapay zeka iyileştirmeleriyle kapsamlı proje planlarına dönüştüren bir "fikir büyütme makinesi" yaratarak yaratıcı iş akışlarında devrim yaratma potansiyeline sahip. 
+
+Aşağıda, sizin tarif ettiğiniz otomatik fikir geliştirme sisteminin ilk LLM halkası olarak işlenmiş bir çıktı sunuyorum. Bu çıktı, zincirdeki bir sonraki LLM’ye girdi olarak kullanılabilecek şekilde yapılandırılmıştır. Sistemin temel konseptini aldım ve onu detaylı bir şekilde genişleterek, bir sonraki aşamada daha fazla geliştirilebilecek bir zemin oluşturdum.
+İşlenmiş Fikir: Otomatik Fikir Geliştirme Sistemi
+Genel Bakış
+Bu sistem, bir masaüstü uygulaması olarak tasarlanmış, kullanıcıdan alınan ham bir fikri, bir dizi Büyük Dil Modeli (LLM) zinciri aracılığıyla otomatik olarak kapsamlı bir proje planına dönüştüren yenilikçi bir araçtır. Uygulama, sade bir sohbet arayüzü üzerinden kullanıcı girdisini alır ve nihai çıktıyı gösterir. Ayrıca, farklı LLM sağlayıcılarının API anahtarlarını güvenli bir şekilde tanımlamak ve yönetmek için detaylı bir ayarlar bölümü içerir.
+Temel Özellikler
+
+    LLM Zincir Yapılandırması:
+    Kullanıcılar, fikrin işleneceği LLM’lerin sırasını ve her bir LLM için özel istemleri (prompt) tanımlayabilir. Bu, zincirin esnekliğini ve uyarlanabilirliğini artırır.
+    API Anahtar Yönetimi:
+    Farklı LLM sağlayıcılarından (örneğin, OpenAI, Anthropic) gelen API anahtarları güvenli bir şekilde saklanır ve her model için doğru anahtar otomatik olarak kullanılır.
+    Fikir Evrim Takibi:
+    Fikrin her LLM aşamasında nasıl geliştiğini gösteren bir görsel arayüz, kullanıcıların süreci takip etmesini ve gerekirse müdahale etmesini sağlar.
+    Dallanma Geliştirme Yolları:
+    Zincirin herhangi bir noktasında alternatif geliştirme yolları oluşturma imkanı, farklı yaklaşımların aynı anda keşfedilmesine olanak tanır.
+    Geri Bildirim Döngüsü:
+    Nihai çıktı değerlendirildikten sonra, kullanıcı isteğine bağlı olarak süreç, revize edilmiş parametrelerle yeniden başlatılabilir.
+
+Teknik Mimari
+
+    Modüler API Entegrasyonu:
+    Çeşitli LLM sağlayıcılarıyla uyumlu, kolayca yeni modellerin eklenebileceği veya çıkarılabileceği esnek bir çerçeve.
+    İş Akışı Motoru:
+    LLM’ler arasında çıktıların sırayla aktarılmasını yöneten, yapılandırılabilir bir otomasyon motoru.
+    İstem Şablonlama:
+    Her LLM’nin rolünü netleştiren ve tutarlılık sağlayan, tekrar kullanılabilir istem şablonları sistemi.
+    Önbellek Katmanı:
+    Performansı optimize etmek ve API maliyetlerini düşürmek için LLM yanıtlarının önbelleğe alınması.
+
+Potansiyel Uygulama Alanları
+
+    Ürün Geliştirme:
+    İlk konseptlerden hızlı bir şekilde prototip planlara geçiş.
+    İçerik Üretimi:
+    Beyin fırtınasından tam metinlere kadar akıcı bir üretim hattı.
+    Problem Çözme:
+    Karmaşık sorunlara sistematik ve derinlemesine çözümler üretme.
+    Araştırma:
+    Hipotez oluşturma ve test süreçlerini otomatikleştirme.
+
+Uygulama Zorlukları
+
+    Zincir boyunca bağlamın tutarlı bir şekilde korunması.
+    Her LLM’nin katkısını en üst düzeye çıkaracak etkili istemlerin tasarlanması.
+    Otomasyon ile kullanıcı kontrolü arasında denge kurulması.
+    LLM’lerden gelen hatalı veya beklenmedik çıktılarla başa çıkma.
+
+Sonraki Adımlar
+
+    Sistem bileşenlerini ve etkileşimlerini detaylandıran bir mimari belge hazırlanması.
+    Fikir geçmişi, LLM yapılandırmaları ve kullanıcı ayarlarını saklamak için veritabanı şemasının tasarlanması.
+    Çoklu sağlayıcı desteği ve güvenli anahtar yönetimi ile API bağlantı çerçevesinin geliştirilmesi.
+    2-3 LLM’den oluşan basit bir zincirle iş akışı motorunun prototipinin oluşturulması ve test edilmesi.
+
+Bu çıktı, sizin tarif ettiğiniz sistemin temel yapısını alır ve onu daha ayrıntılı, yapılandırılmış bir forma sokar. Bir sonraki LLM, bu metni alarak örneğin teknik bir mimari taslak çıkarabilir, kullanıcı arayüzü için wireframe’ler üretebilir veya iş akışını daha da optimize edecek öneriler sunabilir. Sistem, yaratıcı ve analitik süreçleri dönüştürme potansiyeline sahip bir "fikir büyütme makinesi" olarak öne çıkıyor.
+
+Haklısınız, zincirin 3. halkası olarak hareket etmem gerekiyor ve bir önceki LLM’den gelen çıktıyı temel alarak, bir sonraki LLM’ye aktarılacak şekilde işlenmiş, daha derinleştirilmiş ve yorumlanmış bir çıktı üretmeliyim. Aşağıda, zincirin 2. halkasından gelen konsept taslağını, 3. halka olarak daha ileri düzeyde analiz ediyor, teknik ve stratejik açılardan geliştiriyor ve bir sonraki halkaya aktarılacak şekilde optimize ediyorum.
+
+---
+
+## LLM Zincirinin 3. Halkası: Gelişmiş Teknik ve Stratejik Analiz
+
+**1. Stratejik Kapsam Genişletmesi**
+
+- Çatı Proje Vizyonu:  
+  Sistemin sadece fikirden projeye otomasyon değil, aynı zamanda sürekli öğrenen ve kendini iyileştiren bir inovasyon platformu olması hedeflenmeli. Kullanıcı girdilerinden ve LLM zincirinin çıktılarından elde edilen verilerle, öneri motorları ve otomatik süreç iyileştirme modülleri entegre edilebilir.
+
+- Adaptif İş Akışı:  
+  Zincir, sadece sıralı değil, koşullu dallanabilen (conditional branching) ve kullanıcıdan gelen geri bildirimlere göre dinamik olarak yeniden yapılandırılabilen bir iş akışı motoru içermeli. Böylece, her proje için en verimli LLM rotası otomatik olarak seçilebilir.
+
+**2. Teknik Mimari Derinleştirmesi**
+
+- Mikroservis Yaklaşımı:  
+  Her LLM entegrasyonu ayrı bir mikroservis olarak tasarlanmalı. Bu, ölçeklenebilirlik ve bakım kolaylığı sağlar. API anahtar yönetimi ve LLM çağrıları merkezi bir kimlik yönetimi servisi üzerinden güvenli şekilde yönetilmeli.
+
+- Gelişmiş Prompt Yönetimi:  
+  Prompt şablonları, LLM zincirinin önceki halkalarından gelen bağlamı ve kullanıcı tercihlerini otomatik olarak analiz ederek, her LLM için özelleştirilmeli. Prompt’lar üzerinde versiyon kontrolü ve A/B test altyapısı sağlanmalı.
+
+- İzlenebilirlik ve Geri Dönüşüm:  
+  Her zincir adımında, giriş ve çıkışlar ile kullanılan prompt’lar detaylı şekilde loglanmalı. Bu loglar, hem hata ayıklama hem de süreç optimizasyonu için analiz edilebilir olmalı.
+
+**3. Kullanıcı Deneyimi ve Arayüz Geliştirmeleri**
+
+- Proje Evrimi Görselleştirme:  
+  Fikrin zincir boyunca nasıl evrildiğini gösteren interaktif bir akış diyagramı eklenmeli. Kullanıcı, her adımda zincir çıktısını inceleyip gerekirse müdahale edebilmeli.
+
+- Akıllı Ayarlar Paneli:  
+  API anahtarları, LLM seçimi, prompt şablonları ve iş akışı konfigürasyonları için gelişmiş bir ayarlar paneli olmalı. Panel, öneri sistemleriyle kullanıcıya en iyi yapılandırmayı önerebilmeli.
+
+**4. Olası Zorluklar ve Çözüm Önerileri**
+
+- Bağlam Kaybı:  
+  Zincir boyunca bağlamın kaybolmaması için, her adımda özet çıkarma ve bağlam güncelleme mekanizmaları eklenmeli.
+
+- LLM Çıktı Kalitesi:  
+  Her LLM’in çıktısı, belirlenmiş kalite kriterlerine göre otomatik olarak değerlendirilmeli. Düşük kaliteli çıktılar için alternatif yollar veya manuel müdahale opsiyonları sunulmalı.
+
+---
+
+### Bir Sonraki LLM’ye Aktarılacak Girdi
+
+Aşağıdaki metin, zincirin 4. halkasına girdi olarak kullanılmak üzere optimize edilmiştir:
+
+> "Oluşturulan masaüstü uygulaması, fikirden projeye otomasyonun ötesine geçerek, kullanıcı girdilerinden ve zincir çıktılarından öğrenen, kendini sürekli geliştiren bir inovasyon platformu olmalıdır. Teknik mimari, mikroservis tabanlı, merkezi kimlik ve API yönetimiyle güvenli, ölçeklenebilir bir yapıda kurgulanmalı. Prompt yönetimi, bağlamı ve kullanıcı tercihlerini dinamik olarak analiz edip, her LLM için özelleştirilmeli ve versiyonlanmalı. Tüm zincir adımları detaylı şekilde loglanmalı ve süreçler izlenebilir olmalı. Arayüzde, fikir evrimi interaktif olarak görselleştirilmeli ve kullanıcıya akıllı ayarlar paneliyle en iyi yapılandırmalar önerilmelidir. Bağlam kaybını önlemek için özetleme ve bağlam güncelleme mekanizmaları, çıktı kalitesini artırmak için otomatik değerlendirme ve alternatif yol seçenekleri entgre edilmelidir.
+
+---
+
+Bu çıktı, bir sonraki LLM’nin teknik mimariyi detaylandırması, süreç otomasyonunu daha da optimize etmesi veya kullanıcı deneyimini ileri seviyeye taşıyacak öneriler üretmesi için güçlü bir temel sağlar.
+
+Aşağıda, sizin tarif ettiğiniz otomatik fikir geliştirme sisteminin ilk LLM halkası olarak işlenmiş bir çıktı sunuyorum. Bu çıktı, zincirdeki bir sonraki LLM’ye girdi olarak kullanılabilecek şekilde yapılandırılmıştır. Sistemin temel konseptini aldım ve onu detaylı bir şekilde genişleterek, bir sonraki aşamada daha fazla geliştirilebilecek bir zemin oluşturdum.
+İşlenmiş Fikir: Otomatik Fikir Geliştirme Sistemi
+Genel Bakış
+Bu sistem, bir masaüstü uygulaması olarak tasarlanmış, kullanıcıdan alınan ham bir fikri, bir dizi Büyük Dil Modeli (LLM) zinciri aracılığıyla otomatik olarak kapsamlı bir proje planına dönüştüren yenilikçi bir araçtır. Uygulama, sade bir sohbet arayüzü üzerinden kullanıcı girdisini alır ve nihai çıktıyı gösterir. Ayrıca, farklı LLM sağlayıcılarının API anahtarlarını güvenli bir şekilde tanımlamak ve yönetmek için detaylı bir ayarlar bölümü içerir.
+Temel Özellikler
+
+    LLM Zincir Yapılandırması:
+    Kullanıcılar, fikrin işleneceği LLM’lerin sırasını ve her bir LLM için özel istemleri (prompt) tanımlayabilir. Bu, zincirin esnekliğini ve uyarlanabilirliğini artırır.
+    API Anahtar Yönetimi:
+    Farklı LLM sağlayıcılarından (örneğin, OpenAI, Anthropic) gelen API anahtarları güvenli bir şekilde saklanır ve her model için doğru anahtar otomatik olarak kullanılır.
+    Fikir Evrim Takibi:
+    Fikrin her LLM aşamasında nasıl geliştiğini gösteren bir görsel arayüz, kullanıcıların süreci takip etmesini ve gerekirse müdahale etmesini sağlar.
+    Dallanma Geliştirme Yolları:
+    Zincirin herhangi bir noktasında alternatif geliştirme yolları oluşturma imkanı, farklı yaklaşımların aynı anda keşfedilmesine olanak tanır.
+    Geri Bildirim Döngüsü:
+    Nihai çıktı değerlendirildikten sonra, kullanıcı isteğine bağlı olarak süreç, revize edilmiş parametrelerle yeniden başlatılabilir.
+
+Teknik Mimari
+
+    Modüler API Entegrasyonu:
+    Çeşitli LLM sağlayıcılarıyla uyumlu, kolayca yeni modellerin eklenebileceği veya çıkarılabileceği esnek bir çerçeve.
+    İş Akışı Motoru:
+    LLM’ler arasında çıktıların sırayla aktarılmasını yöneten, yapılandırılabilir bir otomasyon motoru.
+    İstem Şablonlama:
+    Her LLM’nin rolünü netleştiren ve tutarlılık sağlayan, tekrar kullanılabilir istem şablonları sistemi.
+    Önbellek Katmanı:
+    Performansı optimize etmek ve API maliyetlerini düşürmek için LLM yanıtlarının önbelleğe alınması.
+
+Potansiyel Uygulama Alanları
+
+    Ürün Geliştirme:
+    İlk konseptlerden hızlı bir şekilde prototip planlara geçiş.
+    İçerik Üretimi:
+    Beyin fırtınasından tam metinlere kadar akıcı bir üretim hattı.
+    Problem Çözme:
+    Karmaşık sorunlara sistematik ve derinlemesine çözümler üretme.
+    Araştırma:
+    Hipotez oluşturma ve test süreçlerini otomatikleştirme.
+
+Uygulama Zorlukları
+
+    Zincir boyunca bağlamın tutarlı bir şekilde korunması.
+    Her LLM’nin katkısını en üst düzeye çıkaracak etkili istemlerin tasarlanması.
+    Otomasyon ile kullanıcı kontrolü arasında denge kurulması.
+    LLM’lerden gelen hatalı veya beklenmedik çıktılarla başa çıkma.
+
+Sonraki Adımlar
+
+    Sistem bileşenlerini ve etkileşimlerini detaylandıran bir mimari belge hazırlanması.
+    Fikir geçmişi, LLM yapılandırmaları ve kullanıcı ayarlarını saklamak için veritabanı şemasının tasarlanması.
+    Çoklu sağlayıcı desteği ve güvenli anahtar yönetimi ile API bağlantı çerçevesinin geliştirilmesi.
+    2-3 LLM’den oluşan basit bir zincirle iş akışı motorunun prototipinin oluşturulması ve test edilmesi.
+
+Bu çıktı, sizin tarif ettiğiniz sistemin temel yapısını alır ve onu daha ayrıntılı, yapılandırılmış bir forma sokar. Bir sonraki LLM, bu metni alarak örneğin teknik bir mimari taslak çıkarabilir, kullanıcı arayüzü için wireframe’ler üretebilir veya iş akışını daha da optimize edecek öneriler sunabilir. Sistem, yaratıcı ve analitik süreçleri dönüştürme potansiyeline sahip bir "fikir büyütme makinesi" olarak öne çıkıyor.
+
+**LLM Zincirinin 5. Halkası: Uygulanabilir Teknik Çözümler ve Prototip Odaklı Detaylandırma**  
+*(Bir sonraki LLM'nin mimari diyagramlar, kod parçacıkları veya UI/UX prototipleri oluşturabilmesi için optimize edilmiş girdi)*
+
+---
+
+### **1. Mikroservis Mimarisinin Somutlaştırılması**
+**Teknoloji Yığını:**  
+- **Çekirdek Motor:** Python + FastAPI (Yüksek performanslı async işlemler için)  
+- **LLM Entegrasyonları:** OpenAI GPT-4o, Claude 3 Opus, Mistral-Large için ayrı Docker konteynerları  
+- **Veri Yönetimi:** PostgreSQL (Yapılandırılmış veri) + Redis (Önbellek ve gerçek zamanlı işlemler)  
+- **Kimlik Yönetimi:** OAuth2.0 + AES-256 ile şifrelenmiş API anahtar depolama  
+
+**Entegrasyon Akışı:**  
+```
+Kullanıcı Girdisi → API Gateway → Auth Mikroservisi → İş Akışı Yöneticisi → [LLM1 → Context Processor → LLM2] → Output Formatter → Kullanıcı Paneli
+```
+*Her LLM çağrısı sonrası bağlam, 512 tokenlık dinamik özetlerle güncellenir.*
+
+---
+
+### **2. Akıllı Prompt Mühendisliği Sistemi**  
+**Bağlamsal Prompt Oluşturucu:**  
+```python
+def generate_context_aware_prompt(user_input, chain_history):
+    base_prompt = "Bir önceki adımda {son_çıktı} üzerine odaklandık. Şimdi:"
+    context = summarize_chain_history(chain_history, max_tokens=300)
+    return f"{base_prompt} {context} {user_input}. Detay seviyesi: {detail_level}/5"
+```
+- **Parametreler:**  
+  - `detail_level`: Kullanıcı tarafından ayarlanan 1-5 arası detay katsayısı  
+  - `chain_history`: JSON formatında geçmiş tüm LLM etkileşimleri  
+
+---
+
+### **3. Kullanıcı Arayüzü Prototip Özellikleri**  
+**Ana Bileşenler:**  
+1. **Fikir Laboratuvarı Paneli:**  
+   - Gerçek zamanlı fikir evrim haritası (D3.js tabanlı force-directed graph)  
+   - Kritik dallanma noktalarında manuel prompt enjeksiyonu için "Müdahale Noktaları"  
+
+2. **API Yönetim Konsolu:**  
+   ```json
+   {
+     "provider": "Anthropic",
+     "api_key": "encrypted:fj39D...",
+     "rate_limit": 1500/day,
+     "cost_tracker": {"son_30gün": "$47.80"}
+   }
+   ```
+3. **Kalite Kontrol Panosu:**  
+   - Otomatik Tutarlılık Skoru (0-100)  
+   - Anomali Tespiti: Beklenmedik çıktılarda otomatik rollback  
+
+---
+
+### **4. Hata Yönetimi ve Dayanıklılık**  
+**Fallback Mekanizması:**  
+```mermaid
+graph LR
+A[LLM1 Hata] --> B{3 Deneme?}
+B -->|Başarısız| C[Alternatif Model: Llama3-70B]
+B -->|Başarılı| D[Sonraki Adım]
+C --> E[Context Repair Module]
+E --> F[Kullanıcı Uyarısı]
+```
+
+**Otomatik Kalite Metrikleri:**  
+1. **Semantik Tutarlılık:** Cosine similarity ile önceki adım çıktıları karşılaştırması  
+2. **Yapısal Geçerlilik:** JSON schema validation for technical outputs  
+3. **Yaratıcılık Endeksi:** N-gram çeşitliliği + latent space analizi  
+
+---
+
+### **5. Sonraki LLM İçin Optimize Edilmiş Girdi**  
+*(Mimari detayları ve UI prototiplerini oluşturmak üzere yapılandırılmış talimatlar)*
+
+> "Geliştirilecek masaüstü uygulaması, FastAPI tabanlı mikroservis mimarisiyle Python'da oluşturulmalıdır. Ana bileşenler: 1) Kullanıcı kimlik doğrulama için OAuth2.0 entegreli auth servisi, 2) LLM çağrılarını yöneten iş akışı motoru, 3) Bağlam özetleme modülü. Veritabanı şemasında; kullanıcılar, API anahtar şifreleri, zincir geçmişi ve prompt şablonları için ayrı tablolar bulunmalı. UI için Electron.js tabanlı, üç panelli (sohbet, evrim haritası, ayarlar) bir yapı öner. Kritik teknik gereksinim: Her LLM çağrısı sonucu 300 tokenlık bağlam özeti oluşturan ve bir sonraki adıma aktaran mekanizma. Hata durumunda otomatik model değiştirme ve kullanıcıya anlık geri bildirim özellikleri entegre edilmeli."
+
+---
+
+**Bir Sonraki Adım için Beklenen Çıktılar:**  
+1. Sistem mimarisinin Docker konteyner diyagramı  
+2. Temel auth servisi için OpenAPI spesifikasyonu  
+3. Bağlam özetleme algoritmasının pseudocode'u  
+4. Ana ekranın low-fidelity UI wireframe'i  
+5. Örnek bir LLM zinciri için Postman koleksiyonu  
+
+Bu yapılandırılmış çıktı, bir sonraki LLM'nin hem teknik dokümantasyon hem de uygulama detayları üretebilmesi için gereken tüm parametreleri ve kısıtlamaları içeriyor.
