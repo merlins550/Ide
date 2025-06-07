@@ -52,13 +52,16 @@ class Persona:
             json.dump(self.__dict__, f, ensure_ascii=False, indent=2)
 
 
+import logging
+
 def load_personas(directory: str = PERSONA_DIR) -> List[Persona]:
     """Load all persona JSON files from the given directory."""
     personas: List[Persona] = []
     for path in sorted(glob.glob(os.path.join(directory, "*.json"))):
         try:
             personas.append(Persona.load(path))
-        except Exception:
+        except Exception as e:
+            logging.error(f"Failed to load persona from {path}: {e}", exc_info=True)
             continue
     return personas
 
