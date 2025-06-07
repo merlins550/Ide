@@ -89,10 +89,7 @@ class LLMWrapper:
 
     def __init__(self, api_key: Optional[str] = None):
         self.api_key = api_key or os.getenv("OPENAI_API_KEY")
-        if self.api_key and OpenAI:
-            self.client = OpenAI(api_key=self.api_key)
-        else:
-            self.client = None
+        self.client = OpenAI(api_key=self.api_key) if self.api_key and OpenAI else None
 
     def chat(self, prompt: str) -> str:
         if self.client:
