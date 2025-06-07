@@ -121,10 +121,14 @@ class WorkflowOrchestrator:
 
     def select_personas(self, idea: str) -> List[Persona]:
         idea_lower = idea.lower()
-        selected = []
-        for persona in self.personas:
-            if any(domain.lower() in idea_lower for domain in persona.expertise_domains):
-                selected.append(persona)
+        selected = [
+            persona
+            for persona in self.personas
+            if any(
+                domain.lower() in idea_lower
+                for domain in persona.expertise_domains
+            )
+        ]
         return selected or self.personas[:1]
 
     def run(self, idea: str) -> Dict[str, str]:
