@@ -73,6 +73,24 @@ python conference_room_fixed.py
 
 This will launch the desktop GUI.
 
+### Running the PDAP Prototype
+
+The repository also includes a minimal command-line prototype for the
+Persona‑Driven Analysis Platform (PDAP). Example usage:
+
+```bash
+python pdap.py "my startup idea" --persona-dir personas
+```
+
+Add `--parallel` to analyze with personas independently instead of chaining:
+
+```bash
+python pdap.py "my startup idea" --persona-dir personas --parallel
+```
+
+This loads all persona definitions from the `personas/` directory and
+prints each persona's analysis of the provided idea.
+
 ## Usage
 
 1.  **Input your idea:** Type your initial idea into the text box at the bottom of the chat interface.
